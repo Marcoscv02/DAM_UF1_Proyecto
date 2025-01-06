@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="PeakFlow.UI.WelcomeFragment"
+        android:label="WelcomeFragment" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_routeListFragment"
+            app:destination="@id/routeListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/routeListFragment"
+        android:name="PeakFlow.UI.RouteListFragment"
+        android:label="RouteListFragment">
+        <action
+            android:id="@+id/action_route_ListFragment_to_route_DetailFragment"
+            app:destination="@id/route_DetailFragment" />
+        <action
+            android:id="@+id/action_route_ListFragment_to_create_RouteFragment"
+            app:destination="@id/create_RouteFragment" />
+        <action
+            android:id="@+id/action_route_ListFragment_to_import_RouteFragment"
+            app:destination="@id/import_RouteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/route_DetailFragment"
+        android:name="PeakFlow.UI.RouteDetailFragment"
+        android:label="Route_DetailFragment" />
+    <fragment
+        android:id="@+id/create_RouteFragment"
+        android:name="CreateRouteFragment"
+        android:label="Create_RouteFragment" />
+    <fragment
+        android:id="@+id/import_RouteFragment"
+        android:name="PeakFlow.UI.ImportRouteFragment"
+        android:label="Import_RouteFragment" />
+</navigation>

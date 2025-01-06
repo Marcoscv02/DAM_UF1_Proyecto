@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.UF1_Proyecto" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+
+    </style>
+
+    <!-- Tema principal de la aplicación que extiende Base.Theme.UF1_Proyecto -->
+    <style name="Theme.UF1_Proyecto" parent="Base.Theme.UF1_Proyecto">
+        <!-- Este es el estilo general de la aplicación, aquí no se aplican cambios directos a los botones -->
+    </style>
+</resources>
