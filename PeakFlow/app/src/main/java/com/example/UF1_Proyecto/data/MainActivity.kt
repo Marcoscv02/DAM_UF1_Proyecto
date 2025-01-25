@@ -3,91 +3,168 @@ package com.example.UF1_Proyecto.data
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.example.PeakFlow.R
-import com.example.UF1_Proyecto.data.database.DatabaseProvider
-import com.example.UF1_Proyecto.data.database.dao.RouteUserDao
-import com.example.UF1_Proyecto.data.database.entities.Location
+import com.example.UF1_Proyecto.data.database.PeakFlowDataBase
+import com.example.UF1_Proyecto.data.database.entities.LocationEntity
 import com.example.UF1_Proyecto.data.database.entities.RouteEntity
 import com.example.UF1_Proyecto.data.database.entities.UserEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.*
+import com.example.UF1_Proyecto.data.utils.SharedPreferencesLogin
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
+
+    /**
+     * Instancia de la base de datos de Room.
+     *
+     * Utiliza `Room.databaseBuilder` para crear o acceder a la base de datos "PeakFlow" de la aplicación.
+     * Esta base de datos se utilizará para almacenar información de  rutas y usuarios, etc.
+     */
+    private val peakFlowdb by lazy {
+        PeakFlowDataBase.getDatabase(applicationContext)
+    }
+
+
+
+    /**
+     * Metodo de inicialización de la vista
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inicializa la base de datos
-        val db = DatabaseProvider.getDatabase(this)
-        val dao = db.rutaUsuarioDao()
 
-        // Operaciones básicas
-        CoroutineScope(Dispatchers.IO).launch {
-            // 1. Insertar un usuario
-            val usuarioId = insertarUsuario(dao)
-            if (usuarioId > 0) {
-                mostrarMensaje("Usuario insertado con ID: $usuarioId")
+        //simula el logeo de un usuario
+        simulateLogIn()
+
+        //populateDatabase() //genera la base de datos con datos ficticios
+
+    }
+
+
+    /**
+     * Simula el inicio de sesión de un usuario.
+     *
+     * Verifica si ya existe un usuario guardado en las preferencias compartidas. Si no es así, simula el inicio de sesión
+     * y guarda el ID del usuario en las preferencias. Luego muestra un mensaje en pantalla.
+     */
+    private fun simulateLogIn() {
+        SharedPreferencesLogin.clearUser(this)
+
+        val userId = SharedPreferencesLogin.getUserId(this)
+
+        if (userId != -1) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val db = PeakFlowDataBase.getDatabase(applicationContext)
+                val user = db.userDao().getUserById(userId)
+
+                withContext(Dispatchers.Main) {
+                    if (user != null) {
+                        Toast.makeText(this@MainActivity, "Logueado como ${user.userName}", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this@MainActivity, "Error al recuperar el usuario", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
+        } else {
+            // Mostrar una opción para seleccionar un usuario de prueba
+            lifecycleScope.launch(Dispatchers.IO) {
+                val db = PeakFlowDataBase.getDatabase(applicationContext)
+                val users = db.userDao().getAllUsers()  // Obtener todos los usuarios disponibles
 
-            // 2. Insertar una ruta asociada al usuario
-            val rutaId = insertarRuta(dao, usuarioId.toInt())
-            if (rutaId > 0) {
-                mostrarMensaje("Ruta insertada con ID: $rutaId")
-            }
-
-            // 3. Consultar rutas por usuario
-            val rutas = consultarRutasPorUsuario(dao, usuarioId.toInt())
-            rutas.forEach { RouteEntity ->
-                mostrarMensaje("Ruta encontrada: ${RouteEntity.nombreRuta}, Distancia: ${RouteEntity.distancia} km")
+                withContext(Dispatchers.Main) {
+                    if (users.isNotEmpty()) {
+                        val userOptions = users.map { "${it.userName} (${it.realName})" }
+                        val builder = android.app.AlertDialog.Builder(this@MainActivity)
+                        builder.setTitle("Selecciona un usuario de prueba")
+                        builder.setItems(userOptions.toTypedArray()) { _, which ->
+                            val selectedUserId = users[which].userId.toInt()  // Asegurarse de convertirlo al tipo entero
+                            SharedPreferencesLogin.saveUser(this@MainActivity, selectedUserId.toInt())
+                            Toast.makeText(this@MainActivity, "Logueado como ${users[which].userName}", Toast.LENGTH_LONG).show()
+                        }
+                        builder.show()
+                    } else {
+                        Toast.makeText(this@MainActivity, "No hay usuarios de prueba disponibles", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
 
-    /**
-     * Inserta un usuario en la base de datos
-     */
-    private suspend fun insertarUsuario(dao: RouteUserDao): Long {
-        val usuario = UserEntity(
-            nombreUsuario = "jdoe",
-            contraseña = "password123",
-            nombreCompleto = "John Doe",
-            email = "jdoe@example.com"
-        )
-        return dao.insertarUsuario(usuario)
-    }
 
     /**
-     * Inserta una ruta en la base de datos
+     * Población de la base de datos con datos de prueba.
+     *
+     * Este método llena la base de datos de Room con datos ficticios sobre usuarios, rutas y ubicaciones.
+     * Los datos son insertados en las tablas correspondientes utilizando las entidades de la base de datos.
      */
-    private suspend fun insertarRuta(dao: RouteUserDao, usuarioId: Int): Long {
-        val ruta = RouteEntity(
-            nombreRuta = "Caminata en el parque",
-            distancia = 3.5,
-            fechaRealizacion = Date(),
-            ubicaciones = listOf(
-                Location(latitud = 40.7128, longitud = -74.0060),
-                Location(latitud = 40.7138, longitud = -74.0050)
-            ),
-            idUsuario = usuarioId
-        )
-        return dao.insertarRuta(ruta)
-    }
+    private fun populateDatabase() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            
+            // Inserta datos de usuarios
+            val users = listOf(
+                UserEntity(
+                    userName = "jdoe",
+                    password = "password123",
+                    realName = "John Doe",
+                    email = "jdoe@example.com"
+                ),
+                UserEntity(
+                    userName = "asmith",
+                    password = "securePass",
+                    realName = "Alice Smith",
+                    email = "asmith@example.com"
+                )
+            )
+            val userIds = peakFlowdb.userDao().createListUsers(users)
 
-    /**
-     * Consulta rutas por usuario
-     */
-    private suspend fun consultarRutasPorUsuario(dao: RouteUserDao, usuarioId: Int): List<RouteEntity> {
-        return dao.obtenerRutasPorUsuario(usuarioId)
-    }
+            // Inserta datos de rutas asociadas al usuario logueado
+            val currentUserId = SharedPreferencesLogin.getUserId(this@MainActivity)  // Obtiene el userId guardado
 
-    /**
-     * Muestra un mensaje en el hilo principal
-     */
-    private fun mostrarMensaje(mensaje: String) {
-        runOnUiThread {
-            Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show()
+            val routes = listOf(
+                RouteEntity(
+                    nombreRuta = "Mountain Trail",
+                    distancia = 5.0,
+                    fechaRealizacion = System.currentTimeMillis(),
+                    idUsuario = userIds[0].toInt(),  // Asocia esta ruta al primer usuario
+                ),
+                RouteEntity(
+                    nombreRuta = "City Walk",
+                    distancia = 3.2,
+                    fechaRealizacion = System.currentTimeMillis(),
+                    idUsuario = userIds[1].toInt(),  // Asocia esta ruta al segundo usuario
+                ),
+                RouteEntity(
+                    nombreRuta = "bike track",
+                    distancia = 54.2,
+                    fechaRealizacion = System.currentTimeMillis(),
+                    idUsuario = userIds[1].toInt(),  // Asocia esta ruta al segundo usuario
+                )
+            )
+            // Inserta rutas y captura sus IDs generados
+            val routeIds = peakFlowdb.routeDao().createListRoutes(routes)
+
+// Usa estos IDs generados para asociar ubicaciones
+            val locations = listOf(
+                LocationEntity(
+                    latitude = 40.7128,
+                    longitude = -74.0060,
+                    routeId = routeIds[0].toInt()  // Asociar a la primera ruta
+                ),
+                LocationEntity(
+                    latitude = 40.7138,
+                    longitude = -74.0050,
+                    routeId = routeIds[0].toInt()
+                ),
+                LocationEntity(
+                    latitude = 37.7749,
+                    longitude = -122.4194,
+                    routeId = routeIds[1].toInt()  // Asociar a la segunda ruta
+                )
+            )
+
+            locations.forEach { location -> peakFlowdb.locationDao().createLocation(location) }
         }
     }
+
 }

@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="PeakFlow.UI.WelcomeFragment"
+        android:name="com.example.UF1_Proyecto.UI.WelcomeFragment"
         android:label="WelcomeFragment" >
         <action
             android:id="@+id/action_welcomeFragment_to_routeListFragment"
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/routeListFragment"
-        android:name="PeakFlow.UI.RouteListFragment"
+        android:name="com.example.UF1_Proyecto.UI.RouteListFragment"
         android:label="RouteListFragment">
         <action
             android:id="@+id/action_route_ListFragment_to_route_DetailFragment"
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/route_DetailFragment"
-        android:name="PeakFlow.UI.RouteDetailFragment"
+        android:name="com.example.UF1_Proyecto.UI.RouteDetailFragment"
         android:label="Route_DetailFragment" />
     <fragment
         android:id="@+id/create_RouteFragment"
@@ -40,6 +40,6 @@
         android:label="Create_RouteFragment" />
     <fragment
         android:id="@+id/import_RouteFragment"
-        android:name="PeakFlow.UI.ImportRouteFragment"
+        android:name="com.example.UF1_Proyecto.UI.ImportRouteFragment"
         android:label="Import_RouteFragment" />
 </navigation>

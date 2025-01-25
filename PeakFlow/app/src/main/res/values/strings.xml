@@ -3,10 +3,15 @@
     <string name="welcome">Welcome!</string>
     <string name="logIn">Log in</string>
     <string name="register">Sing Up</string>
-    <string name="newRoute">Agregar Ruta</string>
-    <string name="trackName">Nombre de la Ruta</string>
-    <string name="startRouteBtn">empezar ruta</string>
-    <string name="saveRouteBtn">guardar ruta</string>
+    <string name="newRoute">Append Route</string>
+    <string name="trackName">Route Name</string>
+    <string name="startRouteBtn">Start route</string>
+    <string name="saveRouteBtn">Save route</string>
+    <string name="recording_time">Route time</string>
+    <string name="distance">Distance</string>
+    <string name="speed">Speed</string>
+    <string name="average_speed">Average Speed</string>
+
 
 
 </resources>

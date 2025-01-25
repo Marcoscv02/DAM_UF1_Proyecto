@@ -1,24 +1,26 @@
 package com.example.UF1_Proyecto.data.database.entities
 
+import androidx.annotation.NonNull
 import androidx.room.*
-import java.sql.Date
 
 // Entidad Ruta
 @Entity(
-    tableName = "rutas",
+    tableName = "route",
     foreignKeys = [ForeignKey(
         entity = UserEntity::class,
-        parentColumns = ["idUsuario"],
-        childColumns = ["idUsuario"],
+        parentColumns = ["user_id"],
+        childColumns = ["user_id"],
         onDelete = ForeignKey.CASCADE
     )]
 )
 data class RouteEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id_ruta") val idRuta: Int = 0,
-    @ColumnInfo(name = "nombre_ruta") val nombreRuta: String,
-    @ColumnInfo(name = "distancia") val distancia: Double,
-    @ColumnInfo(name = "fecha_realizacion") val fechaRealizacion: Date,
-    @ColumnInfo(name = "ubicaciones") val ubicaciones: List<Location>,
-    @ColumnInfo(name = "idUsuario") val idUsuario: Int
+
+    @NonNull@ColumnInfo(name = "route_id") val idRuta: Int = 0,
+    @ColumnInfo(name = "route_name") val nombreRuta: String,
+    @ColumnInfo(name = "route_time") val tiempoRuta: Long? = 0,
+    @ColumnInfo(name = "average_speed") val velMedia: Double? = 0.0,
+    @ColumnInfo(name = "distance") val distancia: Double? = 0.0,
+    @ColumnInfo(name = "track_date") val fechaRealizacion: Long? = null,
+    @ColumnInfo(name = "user_id") val idUsuario: Int,
 )

@@ -1,4 +1,4 @@
-package com.example.UF1_Proyecto.data.database.entities
+package com.example.UF1_Proyecto.data.database.converters
 
 import androidx.room.TypeConverter
 import java.sql.Date

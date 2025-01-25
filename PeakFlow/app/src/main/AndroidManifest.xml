@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    
 
     <application
         android:allowBackup="true"
@@ -12,13 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UF1_Proyecto"
         tools:targetApi="31">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
             android:exported="true"
-            android:name=".data.MainActivity">
+            android:name="com.example.UF1_Proyecto.data.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

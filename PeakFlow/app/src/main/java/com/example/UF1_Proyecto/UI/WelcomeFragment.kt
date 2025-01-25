@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-import com.example.UF1_Proyecto.R
-import com.example.UF1_Proyecto.databinding.FragmentWelcomeBinding
+import com.example.PeakFlow.R
+import com.example.PeakFlow.databinding.FragmentWelcomeBinding
 
 /**
  * Fragmento que muestra la pantalla de bienvenida y gestiona la navegación al fragmento de la lista de rutas.
