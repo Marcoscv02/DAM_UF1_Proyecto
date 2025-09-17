@@ -4,7 +4,6 @@ import androidx.room.*
 
 import com.example.UF1_Proyecto.data.database.entities.UserEntity
 
-@SuppressWarnings("all")  // Esto suprime todas las advertencias en la interfaz
 @Dao
 interface UserDao {
 

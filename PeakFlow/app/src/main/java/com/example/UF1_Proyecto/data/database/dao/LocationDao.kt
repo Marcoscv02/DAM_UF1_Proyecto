@@ -1,10 +1,8 @@
 package com.example.UF1_Proyecto.data.database.dao
 
 import androidx.room.*
-import com.example.UF1_Proyecto.data.database.Relations.LocationWithRoute
 import com.example.UF1_Proyecto.data.database.entities.LocationEntity
 
-@SuppressWarnings("all")  // Esto suprime todas las advertencias en la interfaz
 @Dao
 interface LocationDao {
 

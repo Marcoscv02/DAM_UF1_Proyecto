@@ -4,7 +4,6 @@ import androidx.room.*
 import com.example.UF1_Proyecto.data.database.entities.LocationEntity
 import com.example.UF1_Proyecto.data.database.entities.RouteEntity
 
-@SuppressWarnings("all")  // Esto suprime todas las advertencias en la interfaz
 @Dao
 interface RouteDao {
 
